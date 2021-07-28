@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <meta charset="UTF-8">
+    <title>Libros</title>
+</head>
+<body>
+<h1 class="title is-3">Listado de imágenes con groovy, spring-webflux y bulma</h1>
+<div>
+    <table class="table is-striped is-hoverable is-fullwidth">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Imágen</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="image : ${images}">
+            <td th:text="${image.id}"></td>
+            <td th:text="${image.name}"></td>
+            <td>
+                <a th:href="@{'/images/' + ${image.name} + '/raw'}">
+                    <img th:src="@{'/images/' + ${image.name} + '/raw'}" class="thumbnail">
+                </a>
+            </td>
+            <td>
+                <form th:method="delete" th:action="@{'/images/' + ${image.name} + '/raw'}">
+                    <input type="submit" class="button is-danger is-small" value="Eliminar">
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form method="POST" enctype="multipart/form-data" action="/images">
+        <div class="field is-grouped">
+            <input type="file" class="button is-ghost" name="file"/>
+            <input type="submit" class="button is-link is-small" value="Subir archivo"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>

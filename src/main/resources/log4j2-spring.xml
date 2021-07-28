@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration >
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%throwable" />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="error">
+            <AppenderRef ref="Console" />
+        </Root>
+        <Logger name="com.gioia" level="trace"/>
+        <Logger name="org.springframework.data" level="error"/>
+        <Logger name="reactor.core" level="error"/>
+        <Logger name="com.mongodb" level="error"/>
+        <Logger name="reactor.util" level="error"/>
+    </Loggers>
+</Configuration>

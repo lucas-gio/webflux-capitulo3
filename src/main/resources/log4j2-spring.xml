@@ -13,8 +13,8 @@
         </Root>
         <Logger name="com.gioia" level="trace"/>
         <Logger name="org.springframework.data" level="error"/>
-        <Logger name="reactor.core" level="error"/>
+        <Logger name="reactor.core" level="trace"/>
         <Logger name="com.mongodb" level="error"/>
-        <Logger name="reactor.util" level="error"/>
+        <Logger name="reactor.util" level="trace"/>
     </Loggers>
 </Configuration>

@@ -2,6 +2,8 @@ package com.gioia.capitulo3.home;
 
 
 import com.gioia.capitulo3.images.ImageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +15,13 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 
 @Controller
 public class HomeController {
     private final ImageService imageService;
+    final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public HomeController(ImageService imageService){
         this.imageService = imageService;
@@ -44,20 +48,14 @@ public class HomeController {
     @PostMapping(value="/images")
     public Mono<String> createFile(@RequestPart(name="file") Flux<FilePart> files){
         return imageService.createImage(files)
+            .onErrorResume(e -> Mono.just(logger.error(e.toString())))
             .then(Mono.just("redirect:/"));
     }
 
     @DeleteMapping("/images/{filename:.+}/raw")
-    public Mono<ServerResponse> deleteFile(@PathVariable String filename){
-        Mono<ServerResponse> redirectToHome = ServerResponse
-                .temporaryRedirect(
-                        URI.create("/")
-                )
-                .build();
-
-
+    public Mono<String> deleteFile(@PathVariable String filename){
         return imageService.deleteImage(filename)
-            .then(redirectToHome);
+            .then(Mono.just("redirect:/"));
     }
 
     @GetMapping("/")

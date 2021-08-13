@@ -2,6 +2,7 @@ package com.gioia.capitulo3.images;
 
 import com.mongodb.BasicDBObject;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +13,7 @@ class Image {
     private String name;
 
     private Image(String name){
-        this.id = new BasicDBObject().toString();
+        this.id = new ObjectId().toString();
         this.name = name;
     }
 

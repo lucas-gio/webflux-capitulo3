@@ -18,20 +18,29 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="image : ${images}">
-            <td th:text="${image.id}"></td>
-            <td th:text="${image.name}"></td>
-            <td>
-                <a th:href="@{'/images/' + ${image.name} + '/raw'}">
-                    <img th:src="@{'/images/' + ${image.name} + '/raw'}" class="thumbnail">
-                </a>
-            </td>
-            <td>
-                <form th:method="delete" th:action="@{'/images/' + ${image.name} + '/raw'}">
-                    <input type="submit" class="button is-danger is-small" value="Eliminar">
-                </form>
-            </td>
-        </tr>
+
+        <div th:if="${images == null or images.isEmpty()}">
+            <tr>
+                <td>No se encontraron imágenes. Por favor, suba una imágen.</td>
+            </tr>
+        </div>
+
+        <div th:unless="${images == null or images.isEmpty()}">
+            <tr th:each="image : ${images}">
+                <td th:text="${image.id}"></td>
+                <td th:text="${image.name}"></td>
+                <td>
+                    <a th:href="@{'/images/' + ${image.name} + '/raw'}">
+                        <img th:src="@{'/images/' + ${image.name} + '/raw'}" class="thumbnail">
+                    </a>
+                </td>
+                <td>
+                    <form th:method="delete" th:action="@{'/images/' + ${image.name} + '/raw'}">
+                        <input type="submit" class="button is-danger is-small" value="Eliminar">
+                    </form>
+                </td>
+            </tr>
+        </div>
         </tbody>
     </table>
     <form method="POST" enctype="multipart/form-data" action="/images">

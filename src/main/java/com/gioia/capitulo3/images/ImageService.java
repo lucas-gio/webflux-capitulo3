@@ -38,20 +38,16 @@ public class ImageService {
     public Mono<Resource> findOneImage(String filename){
         // No se crea desde un iterable ya que no tendría sentido al tratarse de un único elemento en lugar de una
         // colección iterable.
-        return Mono.fromSupplier(()->{
-            return resourceLoader.getResource("file:${Application.DIRECTORY}${filename}");
-        });
+        return Mono.fromSupplier(()-> resourceLoader.getResource("file:" + Application.DIRECTORY + filename));
     }
 
     /**
      * Crea el archivo de imágen, obtenido del cliente, en la carpeta temporal.
      * Si no envía un archivo, retorna.
-     * @param files
-     * @return
      */
     public Mono<Void> createImage(Flux<FilePart> files){
         return files
-            .handle((FilePart filePart, SynchronousSink<FilePart> sink)->{
+            /*.handle((FilePart filePart, SynchronousSink<FilePart> sink)->{
                 if(filePart.filename().isEmpty()){
                     sink.error(new ImageUploadException("El archivo debe tener un nombre."));
                 }
@@ -61,7 +57,7 @@ public class ImageService {
                 else {
                     sink.next(filePart);
                 }
-            })
+            })*/
             .flatMap((FilePart file)-> Mono.when(
                 saveDatabaseImage(file),
                 copyFile(file)
@@ -76,34 +72,32 @@ public class ImageService {
     public Mono<Void> copyFile (FilePart file){
         return Mono.just(
                 Paths
-                    .get(Application.DIRECTORY, file.filename())
-                    .toFile()
-            )
-            .log("CreateImage - picktarget")
-            .map((File destFile)->{
-                try {
-                    Paths.get(Application.DIRECTORY)
+                        .get(Application.DIRECTORY, file.filename())
                         .toFile()
-                        .mkdir();
+        )
+                .log("CreateImage - picktarget")
+                .map((File destFile)->{
+                    try {
+                        Paths.get(Application.DIRECTORY)
+                                .toFile()
+                                .mkdir();
 
-                    destFile.createNewFile();
-                } catch (IOException e) {
-                    logger.error("Error al crear el archivo", e);
-                }
-                return destFile;
-            })
-            .log("CreateImage - newFile")
-            .flatMap(file::transferTo)
-            .log("CreateImage - copy")
-            .doOnError((Throwable e)->{
-                logger.error("error en copyFile" + e.toString());
-            });
+                        destFile.createNewFile();
+                    } catch (IOException e) {
+                        logger.error("Error al crear el archivo", e);
+                    }
+                    return destFile;
+                })
+                .log("CreateImage - newFile")
+                .flatMap(file::transferTo)
+                .log("CreateImage - copy")
+                .doOnError((Throwable e)-> logger.error("error en copyFile" + e.toString()));
     }
 
     public Mono<Void> deleteImage(String filename){
         return Mono.when(
-            deleteDatabaseImage(filename),
-            deleteFile(filename)
+                deleteDatabaseImage(filename),
+                deleteFile(filename)
         );
     }
 
@@ -111,7 +105,7 @@ public class ImageService {
         return Mono.fromRunnable(()-> {
             try {
                 Files.deleteIfExists(
-                    Paths.get(Application.DIRECTORY, filename)
+                        Paths.get(Application.DIRECTORY, filename)
                 );
             } catch (IOException e) {
                 logger.error("Error al eliminar el archivo", e);
@@ -119,9 +113,9 @@ public class ImageService {
         });
     }
 
-    public Mono<Void> deleteDatabaseImage(String filename) {
+    public Flux<Void> deleteDatabaseImage(String filename) {
         return imageRepository
-            .findByName(filename)
-            .flatMap(imageRepository::delete);
+                .findAllByName(filename)
+                .flatMap(imageRepository::delete);
     }
 }

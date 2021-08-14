@@ -40,7 +40,7 @@ public class HomeController {
                 catch(Exception e){
                     return ResponseEntity
                         .internalServerError()
-                        .body("No se pudo encontrar la imágen ${filename?:''}. ${e.getMessage()}");
+                        .body("No se pudo encontrar la imágen" + filename + " . " + e.getMessage());
                 }
             });
     }
@@ -48,7 +48,7 @@ public class HomeController {
     @PostMapping(value="/images")
     public Mono<String> createFile(@RequestPart(name="file") Flux<FilePart> files){
         return imageService.createImage(files)
-            .onErrorResume(e -> Mono.just(logger.error(e.toString())))
+            .onErrorResume(e -> Mono.fromRunnable(()-> logger.error(e.getMessage())))
             .then(Mono.just("redirect:/"));
     }
 

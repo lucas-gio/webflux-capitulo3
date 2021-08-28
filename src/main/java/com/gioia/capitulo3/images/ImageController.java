@@ -1,7 +1,6 @@
-package com.gioia.capitulo3.home;
+package com.gioia.capitulo3.images;
 
 
-import com.gioia.capitulo3.images.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -11,19 +10,17 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.invoke.MethodHandles;
-import java.net.URI;
 
 @Controller
-public class HomeController {
+public class ImageController {
     private final ImageService imageService;
     final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public HomeController(ImageService imageService){
+    public ImageController(ImageService imageService){
         this.imageService = imageService;
     }
 
@@ -40,7 +37,7 @@ public class HomeController {
                 catch(Exception e){
                     return ResponseEntity
                         .internalServerError()
-                        .body("No se pudo encontrar la imágen" + filename + " . " + e.getMessage());
+                        .body("No se pudo encontrar la imágen " + filename + " . " + e.getMessage());
                 }
             });
     }

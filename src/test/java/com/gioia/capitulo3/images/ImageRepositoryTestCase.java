@@ -38,9 +38,9 @@ public class ImageRepositoryTestCase {
         StepVerifier // Clase para hacer pruebas con publicadores
                 .create(images)
                 .recordWith(ArrayList::new) // Llevando los registros a una lista
-                .expectNextCount(4) // Se esperan que son 3 unidades
+                .expectNextCount(4) // Se esperan que son 4 unidades
                 .consumeRecordedWith(results-> { // Y se consumen los registros verificando que...
-                    Assertions.assertThat(results).hasSize(4); // Son 3 unidades
+                    Assertions.assertThat(results).hasSize(4); // Son 4q unidades
                     Assertions.assertThat(results) // Que al extraer sus nombres todos contienen esos valores
                             .extracting(Image::getName)
                             .containsExactlyInAnyOrder( // Se contiene en cualquier orden esto

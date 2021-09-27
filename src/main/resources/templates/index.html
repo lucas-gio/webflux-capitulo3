@@ -39,6 +39,18 @@
                         <input type="submit" class="button is-danger is-small" value="Eliminar">
                     </form>
                 </td>
+                <td>
+                    <ul>
+                        <li th:each="comment : ${image.comments}" th:text="${comment.comment}"></li>
+                    </ul>
+                </td>
+                <td>
+                    <form th:action="@{'/comments'}" th:method="post">
+                        <input name="comment" type="text" value=""/>
+                        <input name="imageId" th:value="${image.id}" type="hidden"/>
+                        <input type="submit"/>
+                    </form>
+                </td>
             </tr>
         </div>
         </tbody>

@@ -3,6 +3,7 @@ package com.gioia.capitulo3.initializers;
 import com.gioia.capitulo3.images.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,14 @@ public class DatabaseInitializer {
     @Bean
     CommandLineRunner init(MongoOperations operations){
         return (args)-> initialize(operations);
+    }
+
+    @Bean
+    /**
+     * Utilizado para serialización/deserialización de objetos a string y viceversa para rabbitmq.
+     */
+    Jackson2JsonMessageConverter jackson2JsonMessageConverter(){
+        return new Jackson2JsonMessageConverter();
     }
 
     public void initialize(MongoOperations operations){
